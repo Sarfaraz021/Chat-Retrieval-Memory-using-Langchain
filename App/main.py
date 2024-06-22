@@ -1,13 +1,16 @@
 import os
 from dotenv import load_dotenv
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+# from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain.prompts.prompt import PromptTemplate
 from langchain.chains import RetrievalQA
 from langchain.memory import ConversationBufferMemory
-from langchain_community.document_loaders import DirectoryLoader
-import openai
+# from langchain_community.document_loaders import DirectoryLoader
+# from langchain_community.document_loaders import PyPDFLoader
 from langchain_qdrant import Qdrant
+from langchain_community.document_loaders import TextLoader
+from langchain_text_splitters import CharacterTextSplitter
+
 
 # Load environment variables from the .env file
 load_dotenv('var.env')
@@ -15,16 +18,17 @@ load_dotenv('var.env')
 # Define a class for the chatbot
 
 
-class UniversityAdmissionChatbot:
+class Main:
     def __init__(self):
         self.openai_api_key = os.getenv('OPENAI_API_KEY')
-        self.pinecone_api_key = os.getenv("PINECONE_API_KEY")
-        self.index_name = os.getenv("PINECONE_INDEX_NAME")
-        self.directory_path = "data"
+        # Define the relative and absolute paths for the data file
+        self.relative_path = 'data'
+        self.filename = 'dummy.txt'  # just to initialize the retriever
+        self.absolute_path = os.path.join(self.relative_path, self.filename)
         self.documents = self.load_documents()
         self.docs = self.split_documents(self.documents)
         self.embeddings = OpenAIEmbeddings()
-        self.vectbd = self.initialize_pinecone()
+        self.vectbd = self.initialize_qdrant()
         self.retriever = self.vectbd.as_retriever()
         self.llm = ChatOpenAI(model="gpt-4o", temperature=0.7)
         self.prompt_template = self.create_prompt_template()
@@ -32,20 +36,28 @@ class UniversityAdmissionChatbot:
 
     def load_documents(self):
         """Load documents from the specified directory."""
-        loader = DirectoryLoader(self.directory_path)
+        loader = TextLoader(self.absolute_path)
         return loader.load()
 
     def split_documents(self, documents):
         """Split documents into smaller chunks."""
-        text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=1000, chunk_overlap=100)
+        text_splitter = CharacterTextSplitter(
+            chunk_size=500, chunk_overlap=50)
         return text_splitter.split_documents(documents)
 
-    def initialize_pinecone(self):
-        """Initialize Pinecone vector store with the documents and embeddings."""
-        Pinecone(api_key=self.pinecone_api_key,
-                 environment='REPLACE WITH YOUR ENV NAME OF PINECONE (e.g gcp-starter) ')
-        return PineconeVectorStore.from_documents(self.docs, self.embeddings, index_name=self.index_name)
+    def initialize_qdrant(self):
+        """Initialize Qdrant vector store with the documents and embeddings."""
+        # Define the Qdrant URL
+        url = "http://localhost:6333"
+
+        qdrant = Qdrant.from_documents(
+            self.docs,
+            self.embeddings,
+            url=url,
+            prefer_grpc=False,  # Disable gRPC to use HTTP
+            collection_name="my_documents",
+        )
+        return qdrant
 
     def create_prompt_template(self):
         """Create a prompt template for the conversation."""
@@ -76,7 +88,7 @@ class UniversityAdmissionChatbot:
 
 
 def main():
-    chatbot = UniversityAdmissionChatbot()
+    chatbot = Main()
     while True:
         prompt = input("User> ")
         if prompt.lower() == 'exit':

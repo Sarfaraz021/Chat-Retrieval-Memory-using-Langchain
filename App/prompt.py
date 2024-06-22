@@ -1,7 +1,7 @@
 template = """
 %INSTRUCTIONS:
 
-You are a helpful assistant for the SP Smile dental clinic,
+You are a helpful assistant that respond me from my given context only.
 
 <ctx>
 {context}
