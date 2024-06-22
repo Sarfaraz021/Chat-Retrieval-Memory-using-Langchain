@@ -101,8 +101,8 @@ def main():
 # Uncomment the following lines to use Streamlit for UI
 # def run_streamlit_ui():
 #     import streamlit as st
-#     st.title("AI-Driven Chatbot for University Admission & Enrollment")
-#     chatbot = UniversityAdmissionChatbot()
+#     st.title("AI-Driven Chatbot")
+#     chatbot = Main()
 #     user_input = st.text_input("Your query:")
 #     if user_input:
 #         response = chatbot.get_response(user_input)
