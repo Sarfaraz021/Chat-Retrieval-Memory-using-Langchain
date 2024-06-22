@@ -7,6 +7,7 @@ from langchain.chains import RetrievalQA
 from langchain.memory import ConversationBufferMemory
 from langchain_community.document_loaders import DirectoryLoader
 import openai
+from langchain_qdrant import Qdrant
 
 # Load environment variables from the .env file
 load_dotenv('var.env')

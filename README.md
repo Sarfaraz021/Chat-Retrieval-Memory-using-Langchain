@@ -14,3 +14,5 @@ pip install unstructured
 pip install "unstructured[docx]"
 pip install "unstructured[pdf]"
 pip install docx2txt
+pip install langchain-qdrant
+pip install qdrant-client
