@@ -38,12 +38,13 @@ qdrant/qdrant
 
 ##### First, ensure that your Qdrant instance is running and accessible on port 6333. You can verify this by running the following command in your terminal:
 
-### curl http://localhost:6333
+#### curl http://localhost:6333
 
-## Step3: Once done all above steps, now run main.py and and test it according to your data.
+## Step3: 
+##### Once done all above steps, now run main.py and and test it according to your data.
 
 ##### if you want to load new data, then make sure first update retreival with that data by passing its path in main.py.
 
 ##### If, confusion, then am available for meeting on zoom.
 
-# Thanks
+### Thanks
