@@ -1,6 +1,6 @@
 # Chat-Retrieval-Memory
 
-##### This is the project of Sappyb - Order-10 - Date: Jun 24 2024
+##### This is the project USING Langchain, Qdrant and RAG 
 ##### Use Python Version 3.11.5 or later
 
 ### Step 1:
